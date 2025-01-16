@@ -1,21 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, FormGroup, Input, Label, Modal, ModalHeader, ModalBody } from 'reactstrap'
 import styles from "../stylos.module.css"
 import axios from 'axios';
 
-const Cadastrar = ({ inputs = {}, pegarDadosCarregar = () => { } }) => {
+const Editar = ({ inputs = {}, pegarDadosCarregar = () => { }, id = null }) => {
     const [formulario, setFormulario] = useState(inputs);
     const [erro, setErro] = useState({});
     const [msg, setMsg] = useState("");
-    const [desabilitar, setDesabilitar] = useState(false);
     const [modal, setModal] = useState(false);
 
-    const toggle = () => {
-        setErro({})
-        setMsg("")
-        setFormulario(inputs);
+    const pegarDados = () => {
         setModal(!modal)
-    };
+
+        axios.get("http://localhost:1999/pegarporid.php", { params: { nome: "", id: id } }).then((res) => {
+
+            let ordenado = {
+                nome: res.data.nome,
+                idade: res.data.idade,
+                id: res.data.id,
+            }
+
+            setFormulario(ordenado);
+        }).catch((err) => {
+            alert("Erro interno no servidor");
+        });
+    }
+
+    const toggle = () => {
+        setMsg("")
+        setErro({})
+        setModal(!modal);
+    }
 
     const changeInputs = (e) => {
         const { name, value } = e.target;
@@ -23,12 +38,15 @@ const Cadastrar = ({ inputs = {}, pegarDadosCarregar = () => { } }) => {
         setFormulario({
             ...formulario, [name]: value
         });
+
+        console.log(formulario);
     }
 
     const enviar = (e) => {
         e.preventDefault();
 
         const msgerros = {};
+
 
         for (const [key, value] of Object.entries(formulario)) {
             if (!value) {
@@ -39,11 +57,7 @@ const Cadastrar = ({ inputs = {}, pegarDadosCarregar = () => { } }) => {
                 return;
             }
         }
-
-        setErro(msgerros);
-        setDesabilitar(true);
-
-        axios.post("http://localhost:1999/cadastrar.php", formulario, {
+        axios.post("http://localhost:1999/editar.php", formulario, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -58,27 +72,37 @@ const Cadastrar = ({ inputs = {}, pegarDadosCarregar = () => { } }) => {
             pegarDadosCarregar();
             setMsg("");
             setErro({});
-            setModal(false)
-            setDesabilitar(false);
+            setModal(false);
         }).catch((err) => {
-            if (err) {
-                setModal(true);
-            }
-            setDesabilitar(false)
             console.log(err);
         })
 
 
-        console.log(msg);
+    }
+
+    const tipoInput = (tipo) => {
+
+        if (tipo == "id") {
+            return "hidden";
+        }
+
+    }
+
+    const tipoLabel = (tipo) => {
+
+        if (tipo == "id") {
+            return "";
+        }
+
     }
 
     return (
         <div>
-            <Button color="success" onClick={toggle}>
-                CADASTRAR
+            <Button color="primary" onClick={pegarDados}>
+                EDITAR
             </Button>
             <Modal isOpen={modal} toggle={toggle}>
-                <ModalHeader toggle={toggle}>CADASTRAR</ModalHeader>
+                <ModalHeader toggle={toggle}>EDITAR</ModalHeader>
                 <ModalBody>
                     <form onSubmit={enviar}>
                         <FormGroup>
@@ -86,8 +110,8 @@ const Cadastrar = ({ inputs = {}, pegarDadosCarregar = () => { } }) => {
                                 return (
                                     <div key={index}>
                                         <div className="">
-                                            <Label htmlFor={valor} className={styles.labels}>{valor}</Label>
-                                            <Input disabled={desabilitar} name={valor} onChange={changeInputs} />
+                                            <Label htmlFor={valor} className={styles.labels}>{tipoLabel(valor)}</Label>
+                                            <Input name={valor} value={formulario[valor]} type={tipoInput(valor)} defaultValue={formulario[valor]} onChange={changeInputs} />
                                             <p className={styles.erro}>{erro[valor]}</p>
                                         </div>
                                     </div>
@@ -96,8 +120,8 @@ const Cadastrar = ({ inputs = {}, pegarDadosCarregar = () => { } }) => {
                         </FormGroup>
                         <span className={styles.erro}>{msg}</span>
                         <div className="d-flex gap-2 justify-content-end">
-                            <Button color="danger" disabled={desabilitar} onClick={() => setModal(false)}>FECHAR</Button>
-                            <Button color="success" disabled={desabilitar}>ENVIAR</Button>
+                            <Button color="danger" onClick={() => setModal(false)}>FECHAR</Button>
+                            <Button color="success">ENVIAR</Button>
                         </div>
                     </form>
                 </ModalBody>
@@ -106,4 +130,4 @@ const Cadastrar = ({ inputs = {}, pegarDadosCarregar = () => { } }) => {
     )
 }
 
-export default Cadastrar
+export default Editar
