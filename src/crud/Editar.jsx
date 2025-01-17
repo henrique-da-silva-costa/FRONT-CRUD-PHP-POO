@@ -96,7 +96,7 @@ const Editar = ({ inputs = {}, pegarDadosCarregar = () => { }, id = null }) => {
             }
             setDesabilitar(false)
             setTextoBotaoCarregando("EDITAR")
-            console.log(err);
+            setMsg("Erro interno no servidor. Por favor contate o suporte");
         })
     }
 

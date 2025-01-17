@@ -65,7 +65,6 @@ const Cadastrar = ({ inputs = {}, pegarDadosCarregar = () => { } }) => {
                 setErro(msgerros);
             }
 
-
             if (!res.data.erro) {
                 pegarDadosCarregar();
                 setMsg("");
@@ -79,7 +78,7 @@ const Cadastrar = ({ inputs = {}, pegarDadosCarregar = () => { } }) => {
             }
             setDesabilitar(false)
             setTextoBotaoCarregando("CADASTRAR")
-            console.log(err);
+            setMsg("Erro interno no servidor. Por favor contate o suporte");
         })
     }
 
