@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import Cadastrar from "./crud/Cadastrar"
-import { Container, Table } from "reactstrap"
+import { Button, Container, Input, InputGroup, Label, Table } from "reactstrap"
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
 import Editar from "./crud/Editar"
 import Excluir from "./crud/Excluir"
 import Carregando from "./Carregando"
@@ -10,15 +9,37 @@ import Carregando from "./Carregando"
 const Home = () => {
     const [dados, setDados] = useState([]);
     const [removerLoading, setRemoverLoading] = useState(false);
-    const nav = useNavigate();
+    const [pesquisar, setPesquisar] = useState("");
+
+    const formRef = useRef();
 
     const inputs = {
         nome: "",
         idade: ""
     }
 
-    const pegarDados = () => {
+    const limparFiltro = () => {
+        formRef.current.reset();
+        setPesquisar("");
         axios.get("http://localhost:1999", { params: { nome: "" } }).then((res) => {
+            setDados(res.data);
+            setRemoverLoading(true);
+        }).catch((err) => {
+            if (err) {
+                alert("Erro interno no servidor");
+            }
+
+            alert("Erro interno no servidor");
+        });
+    }
+
+    const pegarDadosCarregar = (e) => {
+        e.preventDefault();
+        pegarDados();
+    }
+
+    const pegarDados = () => {
+        axios.get("http://localhost:1999", { params: { nome: pesquisar } }).then((res) => {
             setDados(res.data);
             setRemoverLoading(true);
         }).catch((err) => {
@@ -40,6 +61,14 @@ const Home = () => {
         <>
             <Container className="mt-2">
                 <h1>Pessoa</h1>
+                <form ref={formRef} onSubmit={pegarDadosCarregar}>
+                    <Label><strong>Nome</strong></Label>
+                    <InputGroup className="w-50">
+                        <Input placeholder="filtrar por nome" onChange={(e) => setPesquisar(e.target.value)} />
+                        <Button color="primary">FILTRAR</Button>
+                    </InputGroup>
+                </form>
+                <Button color="secondary" className="mt-2" onClick={limparFiltro}>LIMPAR</Button>
                 <div className="text-end">
                     <Cadastrar pegarDadosCarregar={pegarDados} inputs={inputs} />
                 </div>
@@ -64,7 +93,7 @@ const Home = () => {
                                     return (
                                         <tr key={index}>
                                             <td>
-                                                {dado.nome}
+                                                {dado.nome.length > 20 ? dado.nome.slice(0, 20) + "..." : dado.nome}
                                             </td>
                                             <td>
                                                 {dado.idade}

@@ -30,10 +30,10 @@ const Excluir = ({ id = null, nome = "", pegarDadosCarregar = () => { } }) => {
             <Button color="danger" onClick={toggle}>
                 EXCLUIR
             </Button>
-            <Modal isOpen={modal} toggle={toggle}>
+            <Modal backdrop={modal ? "static" : true} isOpen={modal} toggle={toggle}>
                 <ModalHeader toggle={toggle}>EXCLUIR</ModalHeader>
                 <ModalBody>
-                    <h4>Deseja exluir {nome}</h4>
+                    <h4>Deseja exluir {nome.slice(0, 20) + "..."} </h4>
                     <p className={styles.erro}>{msg}</p>
                 </ModalBody>
                 <ModalFooter>
