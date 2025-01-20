@@ -1,5 +1,9 @@
 # Projeto Crud com PHP - POO FRONT-END
 
+# Tecnologias usadas.
+
+PHP e Mysql no back-end e react-JS no front-end.
+
 ## Para iniciar o projeto.
 
 Primeiramente, inicie o Back-end -> https://github.com/henrique-da-silva-costa/CRUD-PHP-POO
