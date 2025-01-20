@@ -10,7 +10,7 @@ Em seguida, rode no terminal os comandos npm install e npm start par
  
 ## Descrição.
 
-Esse é um projeto simples que faz um crud em uma unica página.
+Esse é um projeto simples que faz um crud usando POO(Programação orientada o objeto), em uma unica página.
 
 Ele cria, edita, lista e exclui a pessoa e tambem tme um filtro por nome.
 
