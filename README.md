@@ -1,6 +1,6 @@
-# Projeto Crud com PHP - POO FRONT-END
+# Projeto Crud com PHP - POO FRONT-END
 
-## Para iniciar o projeto.
+## Para iniciar o projeto.
 
 Primeiramente, inicie o Back-end -> https://github.com/henrique-da-silva-costa/CRUD-PHP-POO
 
@@ -8,7 +8,7 @@ Tenha a versao mais recente do NODE JS instalado em sua máquina.
 
 Em seguida, rode no terminal os comandos npm install e npm start para iniciar o projeto.  
  
-## Descrição.
+## Descrição.
 
 Esse é um projeto simples que faz um crud em uma unica página.
 
